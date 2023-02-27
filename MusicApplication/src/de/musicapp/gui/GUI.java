@@ -4,6 +4,7 @@ import de.musicapp.Main;
 import de.musicapp.music.Music;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +34,13 @@ public class GUI {
     public static JList<Music> playlistUI = new JList<>();
     public static DefaultListModel<Music> model = new DefaultListModel<>();
     private final JButton skipToSelectedButton = new JButton("Skip to selected");
+    private final JButton deleteSelectedButton = new JButton("Remove selected");
+
+    private final JLabel errorLabel = new JLabel("TEST 123");
 
     public GUI() {
+
+        new ErrorHandling(errorLabel);
 
         frame.setLayout(null);
         frame.setSize(sizeX, sizeY);
@@ -43,7 +49,11 @@ public class GUI {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
 
-        ActionPerformed actionPerformed = new ActionPerformed(skipMusicButton, addMusicButton, pauseButton, skipSeconds, skipSecondsNegative, playlistUI, skipToSelectedButton);
+        ImageIcon imageIcon = new ImageIcon("./MusicApplication/src/de/musicapp/gui/image.png");
+        frame.setIconImage(imageIcon.getImage());
+
+        ActionPerformed actionPerformed = new ActionPerformed(
+                skipMusicButton, addMusicButton, pauseButton, skipSeconds, skipSecondsNegative, playlistUI, skipToSelectedButton, deleteSelectedButton);
         List<JButton> buttons = new ArrayList();
 
         buttons.add(skipMusicButton);
@@ -52,6 +62,7 @@ public class GUI {
         buttons.add(skipSecondsNegative);
         buttons.add(skipSeconds);
         buttons.add(skipToSelectedButton);
+        buttons.add(deleteSelectedButton);
 
         for (JButton button : buttons) {
 
@@ -77,17 +88,21 @@ public class GUI {
         skipSeconds.setSize(skipSecondsNegative.getSize());
         skipMusicButton.setSize(skipSeconds.getSize());
 
+        errorLabel.setBounds(30, pauseButton.getY() - buttonSizeY, 300, buttonSizeY);
+        errorLabel.setForeground(Color.RED);
+
+        errorLabel.setVisible(false);
+
+        frame.add(errorLabel);
 
         // Listing of all the musics
         playlistUI.setModel(model);
         playlistUI.setBounds(sizeX / 2, 10, listSizeX, listSizeY);
 
-        skipToSelectedButton.setBounds(playlistUI.getX(), playlistUI.getY() + listSizeY + 5, listSizeX, buttonSizeY);
+        skipToSelectedButton.setBounds(playlistUI.getX() - 2, playlistUI.getY() + listSizeY + 5, listSizeX / 2, buttonSizeY);
+        deleteSelectedButton.setBounds(playlistUI.getX() + listSizeX / 2 + 2, skipToSelectedButton.getY(), skipToSelectedButton.getWidth(), skipToSelectedButton.getHeight());
 
         frame.add(skipToSelectedButton);
         frame.add(playlistUI);
-
-
     }
-
 }

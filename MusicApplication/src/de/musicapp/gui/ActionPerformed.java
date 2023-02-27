@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public record ActionPerformed(JButton skip, JButton add, JButton pause, JButton skipSec, JButton skipSecNeg, JList<Music> list, JButton selected) implements ActionListener {
+public record ActionPerformed(JButton skip, JButton add, JButton pause, JButton skipSec, JButton skipSecNeg, JList<Music> list, JButton selected, JButton delete) implements ActionListener {
 
     private static final JFileChooser chooser = new JFileChooser();
 
@@ -29,7 +29,7 @@ public record ActionPerformed(JButton skip, JButton add, JButton pause, JButton 
 
                 } else {
 
-                    /// TODO - error box
+                    ErrorHandling.getInstance().showError(ErrorHandling.Error.UNSUPPORTED_FILE);
                     System.out.println("ERROR: Unsupported file");
 
                 }
@@ -37,8 +37,6 @@ public record ActionPerformed(JButton skip, JButton add, JButton pause, JButton 
         }
 
         if (Main.getCurrentPlaylist().getPlaylist().size() != 0) {
-
-            System.out.println("CHECK");
 
             if (e.getSource() == skip) {
                 playList.skipMusic();
@@ -67,14 +65,28 @@ public record ActionPerformed(JButton skip, JButton add, JButton pause, JButton 
             }
         }
 
-
-        if(e.getSource() == selected) {
-            if(list.getSelectedValue() == null)
-                return; // TODO show error
-
+        if (e.getSource() == selected && isSelected()) {
             Main.getCurrentPlaylist().skipToMusic(list.getSelectedValue());
-
         }
+
+        if(e.getSource() == delete && isSelected()) {
+            Main.getCurrentPlaylist().removeMusic(list.getSelectedValue());
+        }
+    }
+
+    private boolean isSelected() {
+
+        if(list.getSelectedValue() == null) {
+
+            ErrorHandling.getInstance().showError(ErrorHandling.Error.NO_FILE_SELECTED);
+
+            System.out.println("ERROR: Nothing selected");
+
+            return false;
+        }else {
+            return true;
+        }
+
     }
 
     private static final String[] fileExtensions = {

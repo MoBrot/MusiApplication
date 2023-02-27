@@ -1,6 +1,7 @@
 package de.musicapp.music;
 
 import de.musicapp.Main;
+import de.musicapp.gui.ErrorHandling;
 
 import javax.sound.sampled.*;
 import java.io.File;
@@ -43,6 +44,10 @@ public class Music {
             this.clip.setMicrosecondPosition(0);
         }catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             e.printStackTrace(); //TODO show error
+
+            Main.getCurrentPlaylist().removeMusic(this);
+
+            System.out.println("ERROR: Unsupported file");
         }
 
         this.length = clip.getMicrosecondLength();
@@ -85,13 +90,13 @@ public class Music {
 
     public void skipSeconds() {
         nullCheck();
-        this.clip.setMicrosecondPosition(this.clip.getMicrosecondPosition() + Main.skipSeconds * 1000L);
+        this.clip.setMicrosecondPosition(this.clip.getMicrosecondPosition() + (Main.skipSeconds * 1000000L));
         logActionInConsole(MusicAction.SKIP);
     }
 
     public void backSeconds() {
         nullCheck();
-        this.clip.setMicrosecondPosition(this.clip.getMicrosecondLength() - Main.skipSeconds * 1000L);
+        this.clip.setMicrosecondPosition(this.clip.getMicrosecondLength() - (Main.skipSeconds * 1000000L));
         logActionInConsole(MusicAction.BACK);
     }
 
@@ -103,7 +108,9 @@ public class Music {
 
     private void nullCheck() {
         if(this.sound == null || this.clip == null || !this.file.exists()) {
+            ErrorHandling.getInstance().showError(ErrorHandling.Error.MUSIC_NOT_AVAILABLE);
             Main.getCurrentPlaylist().skipMusic();
+            Main.getCurrentPlaylist().removeMusic(this);
             logActionInConsole(MusicAction.NULLCHECK);
         }
     }

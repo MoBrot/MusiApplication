@@ -15,8 +15,6 @@ public class Music {
         return musicsNAME.get(name);
     }
 
-
-
     public static boolean doesMusicExist(String name) {
         return musicsNAME.containsKey(name);
     }
@@ -35,6 +33,8 @@ public class Music {
         this.file = file;
         this.id = id;
 
+        System.out.println(file);
+
         try {
             this.sound = AudioSystem.getAudioInputStream(file);
             this.clip = AudioSystem.getClip();
@@ -42,7 +42,7 @@ public class Music {
             this.clip.stop();
             this.clip.setMicrosecondPosition(0);
         }catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO show error
         }
 
         this.length = clip.getMicrosecondLength();
@@ -114,8 +114,6 @@ public class Music {
 
     @Override
     public String toString() {
-        return "Music{" +
-                "name='" + name + '\'' +
-                '}';
+        return this.name;
     }
 }

@@ -5,8 +5,6 @@ import de.musicapp.music.Music;
 import de.musicapp.music.PlayList;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -22,44 +20,53 @@ public record ActionPerformed(JButton skip, JButton add, JButton pause, JButton 
 
         if (e.getSource() == add) {
 
-            if(chooser.showOpenDialog(null) == 0) {
+            if (chooser.showOpenDialog(null) == 0) {
 
                 String path = chooser.getSelectedFile().getAbsolutePath();
-                if(isFileAvailable(path)) {
+                if (isFileAvailable(path)) {
 
                     playList.addMusic(new File(path));
 
-                }else {
+                } else {
 
                     /// TODO - error box
+                    System.out.println("ERROR: Unsupported file");
 
                 }
             }
         }
 
-        if(e.getSource() == skip) {
-            playList.skipMusic();
-        }
+        if (Main.getCurrentPlaylist().getPlaylist().size() != 0) {
 
-        if(e.getSource() == pause) {
-            if (playList.isPaused()) {
-                playList.getCurrentMusic().play();
-                playList.setPaused(false);
-                pause.setText("Pause");
-            } else {
-                playList.getCurrentMusic().stop();
-                playList.setPaused(true);
-                pause.setText("Play");
+            System.out.println("CHECK");
+
+            if (e.getSource() == skip) {
+                playList.skipMusic();
+            }
+
+            if (e.getSource() == pause) {
+
+
+                if (playList.isPaused()) {
+                    playList.getCurrentMusic().play();
+                    playList.setPaused(false);
+                    pause.setText("Pause");
+                } else {
+                    playList.getCurrentMusic().stop();
+                    playList.setPaused(true);
+                    pause.setText("Play");
+                }
+            }
+
+            if (e.getSource() == skipSec) {
+                playList.getCurrentMusic().skipSeconds();
+            }
+
+            if (e.getSource() == skipSecNeg) {
+                playList.getCurrentMusic().backSeconds();
             }
         }
 
-        if(e.getSource() == skipSec) {
-            playList.getCurrentMusic().skipSeconds();
-        }
-
-        if(e.getSource() == skipSecNeg) {
-            playList.getCurrentMusic().backSeconds();
-        }
 
         if(e.getSource() == selected) {
             if(list.getSelectedValue() == null)
@@ -72,8 +79,7 @@ public record ActionPerformed(JButton skip, JButton add, JButton pause, JButton 
 
     private static final String[] fileExtensions = {
 
-            "mp3",
-            "wave"
+            "wav"
 
     };
 

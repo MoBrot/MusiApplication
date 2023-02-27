@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class PlayList {
 
     private final ArrayList<Music> playlist = new ArrayList<>();
-    private int id = 0;
+    private int id = ;
 
     private boolean paused = false;
 
@@ -27,17 +27,16 @@ public class PlayList {
     }
 
     public void skipMusic() {
-        id++;
-        skipping();
+        skipping(this.id + 1);
     }
 
     public void skipToMusic(Music music) {
-        id = music.getId();
-        skipping();
+        skipping(music.getId());
     }
 
-    private void skipping() {
+    private void skipping(int id) {
         getCurrentMusic().stop();
+        this.id = id;
         playlist.get(id).restart();
     }
 
@@ -55,5 +54,10 @@ public class PlayList {
 
     public Music getCurrentMusic() {
         return playlist.get(id);
+    }
+
+
+    public int getId() {
+        return id;
     }
 }

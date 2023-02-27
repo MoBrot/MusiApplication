@@ -3,9 +3,10 @@ package de.musicapp;
 import de.musicapp.gui.GUI;
 import de.musicapp.music.PlayList;
 
-/* TODO - show up all musics in the playlist in GUI
+/* TODO
         - remove button
         - skip to song
+        - error label
  */
 
 public class Main {
